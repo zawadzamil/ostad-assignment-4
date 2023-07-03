@@ -1,0 +1,16 @@
+.product-image {
+    height: 200px;
+    width: 100%;
+    padding: 0.5rem 0.5rem;
+    object-fit: cover;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.card-img-overlay {
+    height: fit-content;
+}
+.product-card {
+    min-height: 25rem;
+}
+.buy {
+    margin-top: auto;
+}
