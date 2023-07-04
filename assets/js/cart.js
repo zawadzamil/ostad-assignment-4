@@ -1,5 +1,10 @@
 const cartContainer = document.querySelector("#cartContainer");
 let cartArray = [];
+
+let cartPrice = 0;
+let cartDiscount = 0;
+let cartTotal = 0;
+
 const addToCart = (productId) => {
     const product = products.find((product) => product.id == productId);
     const newCart = {
@@ -13,7 +18,12 @@ const addToCart = (productId) => {
     console.log(cartArray);
 
     const cartItem = document.createElement("div");
-    cartItem.classList.add("cart-item", "border-bottom", "mb-2", "border-dark");
+    cartItem.classList.add(
+        `cart-item-${product.id}`,
+        "border-bottom",
+        "mb-2",
+        "border-dark"
+    );
 
     // Create the row element
     const row = document.createElement("div");
@@ -84,9 +94,10 @@ const addToCart = (productId) => {
         "btn",
         "btn-sm",
         "btn-danger",
-        "delete-btn",
+        "cart-delete-btn",
         "float-right"
     );
+    deleteButton.id = `delete-btn-${product.id}`;
     deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
 
     // Append the price elements to the price container
@@ -105,12 +116,49 @@ const addToCart = (productId) => {
     cartContainer.appendChild(cartItem);
 };
 
-const addToCartButtons = document.querySelectorAll(".add_to_cart");
-addToCartButtons.forEach((button) => {
-    button.addEventListener("click", function (e) {
+function updatePrice(productId) {
+    const product = products.find((p) => p.id == productId);
+    cartPrice += product.price;
+    cartTotal += product.price;
+
+    document.getElementById("cart_price").innerText = cartPrice.toFixed(2);
+    document.getElementById("cart_total").innerText = cartTotal.toFixed(2);
+}
+// Add to cart
+
+document.addEventListener("DOMContentLoaded", function () {
+    const addToCartButtons = document.querySelectorAll(".add_to_cart");
+    addToCartButtons.forEach((button) => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            const productId = e.target.id;
+            addToCart(productId);
+            updatePrice(productId);
+            alert("Product added successfully!");
+        });
+    });
+
+    // Apply Coupne
+    const applyCouponButton = document.getElementById("apply");
+
+    applyCouponButton.addEventListener("click", (e) => {
         e.preventDefault();
-        const productId = e.target.id;
-        addToCart(productId);
-        alert("Product added successfully!");
+        if (cartPrice > 50) {
+            const code = document.getElementById("coupon").value;
+            cartTotal = code == "OSTAD" ? cartTotal - 50 : cartTotal;
+            document.getElementById("cart_total").innerText =
+                cartTotal.toFixed(2);
+            document.getElementById("cart_discount").innerText = 50;
+        }
+    });
+
+    // Remove Cart Single Item
+    cartContainer.addEventListener("click", function (e) {
+        if (
+            e.target.classList.contains("cart-delete-btn") ||
+            e.target.closest(".cart-delete-btn")
+        ) {
+            console.log("OK");
+        }
     });
 });
