@@ -14,3 +14,6 @@
 .buy {
     margin-top: auto;
 }
+.cart-item-icon:hover {
+    cursor: pointer;
+}
